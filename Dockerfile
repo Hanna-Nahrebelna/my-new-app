@@ -1,20 +1,18 @@
-# Oфіційний образ Node.js як базовий
+# Використовуємо базовий образ Python
 FROM python:3.11-slim
 
-# Робоча директорія всередині контейнера
+# Встановлюємо робочу директорію
 WORKDIR /app
 
-# Скопювання package.json і package-lock.json для встановлення залежностей
-COPY requirements.txt .
+# Копіюємо файли додатку
+COPY requirements.txt requirements.txt
+COPY app.py app.py
 
-# Встановдення всіх залежностей
+# Встановлюємо залежності
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Скопіювання всіх файлів додатку до контейнера
-COPY . .
-
-# Порт, який буде прослуховуватися в контейнері
+# Виставляємо порт, на якому буде працювати Flask
 EXPOSE 3000
 
-# Команда для запуску додатку
+# Запускаємо Flask додаток
 CMD ["python", "app.py"]
