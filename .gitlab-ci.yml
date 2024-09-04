@@ -17,6 +17,9 @@ build:
     # Встановлення AWS CLI
     - apk add --no-cache python3 py3-pip
     - pip install awscli
+    # Перевіряємо значення змінної середовища AWS_REGION
+    - echo "AWS_REGION is set to: $AWS_REGION"
+    - echo "ECR_REPO_URI is set to: $ECR_REPO_URI"
     # Аутентифікація в ECR
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
     # Створення Docker-образу та відправка в репозиторій
