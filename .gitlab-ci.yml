@@ -10,11 +10,16 @@ variables:
 
 build:
   stage: build
-  image: docker:20.10-dind
+  image: docker:20.10
   services:
     - docker:dind
   script:
+    # Встановлення AWS CLI
+    - apk add --no-cache python3 py3-pip
+    - pip install awscli
+    # Аутентифікація в ECR
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
+    # Створення Docker-образу та відправка в репозиторій
     - docker build -t $ECR_REPO_URI .
     - docker push $ECR_REPO_URI
 
