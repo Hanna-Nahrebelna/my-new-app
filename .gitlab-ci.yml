@@ -15,15 +15,22 @@ build:
   services:
     - docker:dind
   script:
+    - apk add --no-cache py3-pip # Встановлення pip, якщо необхідно
+    - pip install awscli # Встановлення AWS CLI
+    - aws --version # Перевірка версії AWS CLI
     - echo "$AWS_SECRET_ACCESS_KEY" | docker login -u AWS --password-stdin $ECR_REPO_URI
-    - docker build -t $ECR_REPO_URI .
-    - docker push $ECR_REPO_URI
+    - docker build -t $ECR_REPO_URI:latest .
+    - docker push $ECR_REPO_URI:latest
 
 deploy:
   stage: deploy
   script:
     - echo "$SSH_PRIVATE_KEY" > private_key.pem
     - chmod 600 private_key.pem
-    - ssh -i private_key.pem ec2-user@$EC2_HOST 'docker pull $ECR_REPO_URI && cd /path/to/docker-compose/directory && docker-compose up -d'
+    - ssh -o StrictHostKeyChecking=no -i private_key.pem ec2-user@$EC2_HOST << 'EOF'
+      docker pull $ECR_REPO_URI:latest
+      cd /path/to/docker-compose/directory
+      docker-compose up -d
+      EOF
   only:
     - main
