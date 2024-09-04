@@ -14,8 +14,6 @@ build:
   services:
     - docker:dind
   script:
-    - echo "AWS_REGION is set to: ${AWS_REGION:-Not Set}"
-    - echo "ECR_REPO_URI is set to: ${ECR_REPO_URI:-Not Set}"
     - apk add --no-cache py3-pip
     - pip install awscli
     - aws --version
