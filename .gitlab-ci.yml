@@ -1,0 +1,29 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  # Змінні для Docker і AWS
+  ECR_REPO_URI: $ECR_REPO_URI
+  AWS_REGION: $AWS_REGION
+  EC2_HOST: $EC2_HOST
+  SSH_PRIVATE_KEY: $SSH_PRIVATE_KEY
+
+build:
+  stage: build
+  image: docker:20.10-dind
+  services:
+    - docker:dind
+  script:
+    - echo "$AWS_SECRET_ACCESS_KEY" | docker login -u AWS --password-stdin $ECR_REPO_URI
+    - docker build -t $ECR_REPO_URI .
+    - docker push $ECR_REPO_URI
+
+deploy:
+  stage: deploy
+  script:
+    - echo "$SSH_PRIVATE_KEY" > private_key.pem
+    - chmod 600 private_key.pem
+    - ssh -i private_key.pem ec2-user@$EC2_HOST 'docker pull $ECR_REPO_URI && cd /path/to/docker-compose/directory && docker-compose up -d'
+  only:
+    - main
