@@ -3,6 +3,7 @@ stages:
   - deploy
 
 variables:
+  # Змінні для Docker і AWS
   ECR_REPO_URI: $ECR_REPO_URI
   AWS_REGION: $AWS_REGION
   EC2_HOST: $EC2_HOST
@@ -10,19 +11,16 @@ variables:
 
 build:
   stage: build
-  image: docker:20.10
+  image: docker:20.10-dind
   services:
     - docker:dind
   script:
-    # Встановлення AWS CLI
-    - apk add --no-cache python3 py3-pip
-    - pip install awscli
-    # Перевіряємо значення змінної середовища AWS_REGION
     - echo "AWS_REGION is set to: $AWS_REGION"
     - echo "ECR_REPO_URI is set to: $ECR_REPO_URI"
-    # Аутентифікація в ECR
+    - apk add --no-cache py3-pip
+    - pip install awscli
+    - aws --version
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
-    # Створення Docker-образу та відправка в репозиторій
     - docker build -t $ECR_REPO_URI .
     - docker push $ECR_REPO_URI
 
