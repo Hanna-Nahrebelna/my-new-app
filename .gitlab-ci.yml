@@ -3,7 +3,6 @@ stages:
   - deploy
 
 variables:
-  # Змінні для Docker і AWS
   ECR_REPO_URI: $ECR_REPO_URI
   AWS_REGION: $AWS_REGION
   EC2_HOST: $EC2_HOST
@@ -15,8 +14,8 @@ build:
   services:
     - docker:dind
   script:
-    - echo "AWS_REGION is set to: $AWS_REGION"
-    - echo "ECR_REPO_URI is set to: $ECR_REPO_URI"
+    - echo "AWS_REGION is set to: ${AWS_REGION:-Not Set}"
+    - echo "ECR_REPO_URI is set to: ${ECR_REPO_URI:-Not Set}"
     - apk add --no-cache py3-pip
     - pip install awscli
     - aws --version
