@@ -1,18 +1,20 @@
-# Використовуємо базовий образ Python
+# Використовуйте офіційний Python образ як базовий образ
 FROM python:3.11-slim
 
-# Встановлюємо робочу директорію
+# Встановіть робочу директорію
 WORKDIR /app
 
-# Копіюємо файли додатку
-COPY requirements.txt requirements.txt
-COPY app.py app.py
+# Скопіюйте requirements.txt в контейнер
+COPY requirements.txt .
 
-# Встановлюємо залежності
+# Оновіть pip до останньої версії
+RUN pip install --upgrade pip
+
+# Встановіть залежності
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Виставляємо порт, на якому буде працювати Flask
-EXPOSE 3000
+# Скопіюйте весь вміст проекту в контейнер
+COPY . .
 
-# Запускаємо Flask додаток
+# Вкажіть команду для запуску вашого додатку
 CMD ["python", "app.py"]
