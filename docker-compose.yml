@@ -1,9 +1,10 @@
-version: '3.9'
+version: '3.8'
+
 services:
   web:
     build: .
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       DATABASE_HOST: db
       DATABASE_NAME: mydatabase
@@ -22,6 +23,8 @@ services:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+      # - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      # - ./postgresql.conf:/var/lib/postgresql/data/postgresql.conf
 
 volumes:
   db-data:
