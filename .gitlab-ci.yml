@@ -9,9 +9,9 @@ variables:
   IMAGE_NAME: "projects/myapp"
   IMAGE_TAG: "latest"
   AWS_REGION: us-east-1
-  ECR_REPO_URI: 637423165930.dkr.ecr.us-east-1.amazonaws.com/projects/myapp
-  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+  ECR_REPO_URI: "637423165930.dkr.ecr.us-east-1.amazonaws.com/projects/myapp"
+  AWS_ACCESS_KEY_ID: "$AWS_ACCESS_KEY_ID"
+  AWS_SECRET_ACCESS_KEY: "$AWS_SECRET_ACCESS_KEY"
 
 stages:
   - check
