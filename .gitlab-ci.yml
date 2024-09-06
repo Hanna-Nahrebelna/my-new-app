@@ -31,7 +31,7 @@ build:
     - aws --version
     - echo "AWS_REGION: $AWS_REGION"
     - echo "ECR_REPO_URI: $ECR_REPO_URI"
-    - echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID" # Не виводьте секретні ключі в логах
+    - echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
     - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO_URI
     - docker build -t $ECR_REPO_URI .
     - docker push $ECR_REPO_URI
