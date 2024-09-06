@@ -14,8 +14,14 @@ variables:
   AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
 
 stages:
+  - check
   - build
   - deploy
+
+check_time:
+  stage: check
+  script:
+    - date
 
 build:
   stage: build
