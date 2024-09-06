@@ -23,8 +23,6 @@ check_time:
   script:
     - echo "Current date:"
     - date
-    - echo "AWS_REGION: ${AWS_REGION}"
-    - echo "ECR_REPO_URI: ${ECR_REPO_URI}"
 
 build:
   stage: build
