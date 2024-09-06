@@ -30,6 +30,7 @@ build:
     - apk add --no-cache py3-pip
     - pip install awscli
     - aws --version
+    - aws configure set region ${AWS_REGION}
     - aws configure list
     - aws sts get-caller-identity
     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URI}
