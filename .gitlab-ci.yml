@@ -21,7 +21,6 @@ stages:
 check_time:
   stage: check
   script:
-    - echo "Current date:"
     - date
 
 build:
@@ -36,11 +35,8 @@ build:
     - aws configure list
     - echo "Getting AWS identity to verify credentials:"
     - aws sts get-caller-identity
-    - echo "Logging into Amazon ECR:"
     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URI}
-    - echo "Building Docker image:"
     - docker build -t ${ECR_REPO_URI} .
-    - echo "Pushing Docker image to ECR:"
     - docker push ${ECR_REPO_URI}
 
 deploy:
@@ -48,6 +44,6 @@ deploy:
   script:
     - echo "$SSH_PRIVATE_KEY" > private_key.pem
     - chmod 600 private_key.pem
-    - ssh -i private_key.pem ec2-user@$EC2_HOST 'docker pull ${ECR_REPO_URI} && cd /path/to/docker-compose/directory && docker-compose up -d'
+    - ssh -i private_key.pem ec2-user@$EC2_HOST 'docker pull $ECR_REPO_URI && cd /path/to/docker-compose/directory && docker-compose up -d'
   only:
     - main
