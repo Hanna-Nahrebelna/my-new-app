@@ -30,11 +30,17 @@ build:
     - apk add --no-cache py3-pip
     - pip install awscli
     - aws --version
+    - echo "Configuring AWS CLI region to ${AWS_REGION}"
     - aws configure set region ${AWS_REGION}
+    - echo "Checking AWS configuration:"
     - aws configure list
+    - echo "Getting AWS identity to verify credentials:"
     - aws sts get-caller-identity
+    - echo "Logging into Amazon ECR:"
     - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URI}
+    - echo "Building Docker image:"
     - docker build -t ${ECR_REPO_URI} .
+    - echo "Pushing Docker image to ECR:"
     - docker push ${ECR_REPO_URI}
 
 deploy:
