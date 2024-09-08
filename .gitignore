@@ -1,0 +1,5 @@
+Add-Content -Path .gitignore -Value ".DS_Store"
+Add-Content -Path .gitignore -Value "node_modules/"
+Add-Content -Path .gitignore -Value "*.log"
+Add-Content -Path .gitignore -Value ".env"
+Add-Content -Path .gitignore -Value "coverage/"
