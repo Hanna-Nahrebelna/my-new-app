@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    image: 637423165930.dkr.ecr.us-east-1.amazonaws.com/my-new-app:latest
     ports:
       - "3001:3000"
     environment:
