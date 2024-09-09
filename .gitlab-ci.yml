@@ -1,0 +1,49 @@
+image: docker:20.10
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_REGISTRY_URL: "637423165930.dkr.ecr.us-east-1.amazonaws.com"
+  IMAGE_NAME: "projects/myapp"
+  IMAGE_TAG: "latest"
+  AWS_REGION: us-east-1
+  ECR_REPO_URI: 637423165930.dkr.ecr.us-east-1.amazonaws.com/projects/myapp
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+
+stages:
+  - check
+  - build
+  - deploy
+
+check_time:
+  stage: check
+  script:
+    - date
+
+build:
+  stage: build
+  script:
+    - echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}"
+    - echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}"
+    - echo "AWS_REGION=${AWS_REGION}"
+    - apk add --no-cache py3-pip
+    - pip install awscli
+    - aws --version
+    - aws configure set region ${AWS_REGION}
+    - aws configure list
+    - aws sts get-caller-identity
+    - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO_URI}
+    - docker build -t ${ECR_REPO_URI} .
+    - docker push ${ECR_REPO_URI}
+
+deploy:
+  stage: deploy
+  script:
+    - echo "$SSH_PRIVATE_KEY" > private_key.pem
+    - chmod 600 private_key.pem
+    - ssh -i private_key.pem ec2-user@$EC2_HOST 'docker pull $ECR_REPO_URI && cd /path/to/docker-compose/directory && docker-compose up -d'
+  only:
+    - main
