@@ -43,7 +43,7 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY" > /tmp/private_key.pem
           chmod 600 /tmp/private_key.pem
-          ssh -o StrictHostKeyChecking=no -i /tmp/private_key.pem ec2-user@35.173.203.244 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i /tmp/private_key.pem $EC2_USER@$EC2_IP << 'EOF'
             docker pull $ECR_URI:latest
             docker-compose -f /home/ec2-user/myapp/docker-compose.yml up -d
           EOF
