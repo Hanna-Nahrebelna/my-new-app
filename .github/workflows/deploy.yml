@@ -22,7 +22,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # Змініть на ваш регіон
+          aws-region: us-east-1
 
       - name: Log in to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
@@ -38,10 +38,12 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
           ECR_URI: ${{ secrets.ECR_URI }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_IP: ${{ secrets.EC2_IP }}
         run: |
           echo "$SSH_PRIVATE_KEY" > /tmp/private_key.pem
           chmod 600 /tmp/private_key.pem
           ssh -o StrictHostKeyChecking=no -i /tmp/private_key.pem ec2-user@35.173.203.244 << 'EOF'
             docker pull $ECR_URI:latest
-            docker-compose -f /path/to/your/docker-compose.yml up -d
+            docker-compose -f /home/ec2-user/myapp/docker-compose.yml up -d
           EOF
